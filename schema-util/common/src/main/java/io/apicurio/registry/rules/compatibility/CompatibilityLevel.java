@@ -26,5 +26,6 @@ public enum CompatibilityLevel {
     FORWARD_TRANSITIVE,
     FULL,
     FULL_TRANSITIVE,
+    CUSTOM,
     NONE
 }

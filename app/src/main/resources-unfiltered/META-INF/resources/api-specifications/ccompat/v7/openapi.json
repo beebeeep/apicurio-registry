@@ -1648,6 +1648,7 @@
               "FORWARD_TRANSITIVE",
               "FULL",
               "FULL_TRANSITIVE",
+              "CUSTOM",
               "NONE"
             ],
             "type": "string"
@@ -1670,6 +1671,7 @@
               "FORWARD_TRANSITIVE",
               "FULL",
               "FULL_TRANSITIVE",
+              "CUSTOM",
               "NONE"
             ],
             "type": "string"

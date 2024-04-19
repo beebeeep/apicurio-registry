@@ -54,6 +54,9 @@ public abstract class AbstractCompatibilityChecker<D> implements CompatibilityCh
             case BACKWARD:
                 incompatibleDiffs = isBackwardsCompatibleWith(lastExistingSchema, proposedArtifactContent, resolvedReferences);
                 break;
+            case CUSTOM:
+                incompatibleDiffs = isParquetCompatibleWith(lastExistingSchema, proposedArtifactContent, resolvedReferences);
+                break;
             case BACKWARD_TRANSITIVE:
                 incompatibleDiffs = transitively(existingArtifacts, proposedArtifactContent, (existing, proposed) -> isBackwardsCompatibleWith(existing, proposed, resolvedReferences));
                 break;
@@ -103,6 +106,8 @@ public abstract class AbstractCompatibilityChecker<D> implements CompatibilityCh
     }
 
     protected abstract Set<D> isBackwardsCompatibleWith(String existing, String proposed, Map<String, ContentHandle> resolvedReferences);
+
+    protected abstract Set<D> isParquetCompatibleWith(String existing, String proposed, Map<String, ContentHandle> resolvedReferences);
 
     protected abstract CompatibilityDifference transform(D original);
 }

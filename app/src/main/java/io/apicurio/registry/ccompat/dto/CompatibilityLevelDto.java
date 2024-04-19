@@ -58,6 +58,7 @@ public class CompatibilityLevelDto {
         FORWARD_TRANSITIVE("FORWARD_TRANSITIVE"),
         FULL("FULL"),
         FULL_TRANSITIVE("FULL_TRANSITIVE"),
+        CUSTOM("CUSTOM"),
         NONE("NONE");
 
         public static Level create(Optional<CompatibilityLevel> source) {
@@ -75,6 +76,8 @@ public class CompatibilityLevelDto {
                         return Level.FULL;
                     case FULL_TRANSITIVE:
                         return Level.FULL_TRANSITIVE;
+                    case CUSTOM:
+                        return Level.CUSTOM;
                     case NONE:
                         return Level.NONE;
                 }

@@ -35,6 +35,11 @@ public class JsonSchemaCompatibilityChecker extends AbstractCompatibilityChecker
         return JsonSchemaDiffLibrary.getIncompatibleDifferences(existing, proposed, resolvedReferences);
     }
 
+    protected Set<Difference> isParquetCompatibleWith(String existing, String proposed, Map<String, ContentHandle> resolvedReferences) {
+        // WARNING: not implementing CUSTOM compatibility check for JSON schemas!
+        return JsonSchemaDiffLibrary.getIncompatibleDifferences(existing, proposed, resolvedReferences);
+    }
+
     @Override
     protected CompatibilityDifference transform(Difference original) {
         return new JsonSchemaCompatibilityDifference(original);
