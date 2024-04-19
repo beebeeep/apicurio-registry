@@ -17,6 +17,7 @@
 package io.apicurio.registry.ccompat.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
@@ -54,6 +55,6 @@ public class CompatibilityCheckResponse {
     @JsonProperty("is_compatible")
     private boolean isCompatible;
 
-    @JsonProperty("reason")
+    @JsonIgnore
     private String reason;
 }

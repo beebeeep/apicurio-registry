@@ -17,6 +17,7 @@
 package io.apicurio.registry.ccompat.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -61,6 +62,6 @@ public class Schema {
     @JsonProperty("schemaType")
     private String schemaType;
 
-    @JsonProperty("references")
+    @JsonIgnore
     private List<SchemaReference> references;
 }
