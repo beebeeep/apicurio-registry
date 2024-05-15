@@ -18,10 +18,10 @@ package io.apicurio.registry.rules.compatibility;
 
 import com.google.common.collect.ImmutableSet;
 import io.apicurio.registry.content.ContentHandle;
+import io.apicurio.registry.rules.AvroCustomChecker;
 import io.apicurio.registry.rules.UnprocessableSchemaException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Map;
@@ -55,16 +55,19 @@ public class AvroCompatibilityChecker extends AbstractCompatibilityChecker<Incom
       }
       final Schema proposedSchema = proposingParser.parse(proposed);
 
+      var customIssues = AvroCustomChecker.validate(proposedSchema);
+
       var result =
           SchemaCompatibility.checkReaderWriterCompatibility(proposedSchema, existingSchema)
               .getResult();
       switch (result.getCompatibility()) {
         case COMPATIBLE:
-          return Collections.emptySet();
+          return customIssues;
         case INCOMPATIBLE:
           {
             return ImmutableSet.<Incompatibility>builder()
                 .addAll(result.getIncompatibilities())
+                .addAll(customIssues)
                 .build();
           }
         default:

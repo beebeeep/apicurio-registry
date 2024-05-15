@@ -19,7 +19,9 @@ package io.apicurio.registry.rules.validity;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import io.apicurio.registry.rules.AvroCustomChecker;
 import org.apache.avro.Schema;
 
 import io.apicurio.registry.content.ContentHandle;
@@ -34,7 +36,7 @@ import io.apicurio.registry.types.RuleType;
  * @author eric.wittmann@gmail.com
  */
 public class AvroContentValidator implements ContentValidator {
-    
+
     private static final String DUMMY_AVRO_RECORD = "{\n"
             + "     \"type\": \"record\",\n"
             + "     \"namespace\": \"NAMESPACE\",\n"
@@ -62,13 +64,19 @@ public class AvroContentValidator implements ContentValidator {
                 for (ContentHandle schema : resolvedReferences.values()) {
                     parser.parse(schema.content());
                 }
-                parser.parse(artifactContent.content());
+              var issues = AvroCustomChecker.validate(parser.parse(artifactContent.content()));
+              if (!issues.isEmpty()) {
+                throw new Exception(
+                    issues.stream()
+                        .map(x -> String.format("%s at %s", x.getMessage(), x.getLocation()))
+                        .collect(Collectors.joining(",")));
+              }
             } catch (Exception e) {
-                throw new RuleViolationException("Syntax violation for Avro artifact.", RuleType.VALIDITY, level.name(), e);
+                throw new RuleViolationException(String.format("Syntax violation for Avro artifact: %s", e.getMessage()), RuleType.VALIDITY, level.name(), e);
             }
         }
     }
-    
+
     /**
      * @see io.apicurio.registry.rules.validity.ContentValidator#validateReferences(io.apicurio.registry.content.ContentHandle, java.util.List)
      */
@@ -91,7 +99,7 @@ public class AvroContentValidator implements ContentValidator {
             // is because of a missing defined type or some OTHER parse exception.
             if (e.getMessage().contains("is not a defined name")) {
                 RuleViolation violation = new RuleViolation("Missing reference detected.", e.getMessage());
-                throw new RuleViolationException("Missing reference detected in Avro artifact.", RuleType.INTEGRITY, 
+                throw new RuleViolationException("Missing reference detected in Avro artifact.", RuleType.INTEGRITY,
                         IntegrityLevel.ALL_REFS_MAPPED.name(), Collections.singleton(violation));
             }
         }
